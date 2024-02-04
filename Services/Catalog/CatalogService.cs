@@ -2,10 +2,8 @@
 
 namespace EcomCli.Services.Catalog
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using EcomCli.Data;
     using EcomCli.Data.Entities;
     using EcomCli.Data.Repositories;
 
@@ -14,14 +12,24 @@ namespace EcomCli.Services.Catalog
     /// </summary>
     internal class CatalogService
     {
+        private readonly IProductRepository productRepository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CatalogService"/> class.
+        /// </summary>
+        /// <param name="productRepository">The product repository to use.</param>
+        public CatalogService(IProductRepository productRepository)
+        {
+            this.productRepository = productRepository;
+        }
+
         /// <summary>
         /// Gets all the products.
         /// </summary>
         /// <returns>A collection of <see cref="ProductInfo"/>.</returns>
         public IReadOnlyCollection<ProductInfo> GetAllProducts()
         {
-            var repository = new ProductRepository();
-            var availableProducts = repository.GetAvailableProducts();
+            var availableProducts = this.productRepository.GetAvailableProducts();
             return availableProducts.Select(p => new ProductInfo
             {
                 Id = p.Id,
@@ -37,8 +45,7 @@ namespace EcomCli.Services.Catalog
         /// <returns><see cref="Product"/>.</returns>
         public Product GetProduct(int productId)
         {
-            var repository = new ProductRepository();
-            return repository.GetProduct(productId);
+            return this.productRepository.GetProduct(productId);
         }
 
         /// <summary>

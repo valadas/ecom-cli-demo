@@ -6,15 +6,10 @@ namespace EcomCli.Data.Repositories
     using System.Linq;
     using EcomCli.Data.Entities;
 
-    /// <summary>
-    /// Provides data-access to products.
-    /// </summary>
-    internal class ProductRepository
+    /// <inheritdoc cref="IProductRepository"/>
+    internal class ProductRepository : IProductRepository
     {
-        /// <summary>
-        /// Gets the available products (in stock).
-        /// </summary>
-        /// <returns>A collection of <see cref="Product"/>.</returns>
+        /// <inheritdoc/>
         public IReadOnlyCollection<Product> GetAvailableProducts()
         {
             using (var dataContext = new EcomContext())
@@ -27,11 +22,7 @@ namespace EcomCli.Data.Repositories
             }
         }
 
-        /// <summary>
-        /// Gets a single product.
-        /// </summary>
-        /// <param name="id">The identifier for the product to get.</param>
-        /// <returns><see cref="Product"/>.</returns>
+        /// <inheritdoc/>
         public Product GetProduct(int id)
         {
             using (var dataContext = new EcomContext())

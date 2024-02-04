@@ -4,6 +4,7 @@ namespace EcomCli
 {
     using System;
     using System.Runtime.CompilerServices;
+    using EcomCli.Data.Repositories;
     using EcomCli.Services.Cart;
     using EcomCli.Services.Catalog;
 
@@ -22,7 +23,8 @@ namespace EcomCli
             Console.WriteLine();
             Console.WriteLine("Please choose a product");
 
-            var catalogService = new CatalogService();
+            var productRepository = new ProductRepository();
+            var catalogService = new CatalogService(productRepository);
             var prodcuts = catalogService.GetAllProducts();
 
             foreach (var product in prodcuts)
@@ -36,7 +38,7 @@ namespace EcomCli
             var quantity = AskForAmount();
 
             var cart = new Cart();
-            var cartService = new CartService();
+            var cartService = new CartService(productRepository);
             cartService.AddProduct(cart, selectedProductId, quantity);
 
             Console.WriteLine("Do you live far ?");

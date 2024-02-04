@@ -13,14 +13,15 @@ namespace EcomCli.Services.Cart
     /// </summary>
     internal class CartService
     {
-        private readonly ProductRepository productRepository;
+        private readonly IProductRepository productRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartService"/> class.
         /// </summary>
-        public CartService()
+        /// <param name="productRepository">The product repository to use.</param>
+        public CartService(IProductRepository productRepository)
         {
-            this.productRepository = new ProductRepository();
+            this.productRepository = productRepository;
         }
 
         /// <summary>
