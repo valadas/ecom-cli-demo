@@ -12,14 +12,19 @@ namespace EcomCli.Services.Cart
     internal class CartService : ICartService
     {
         private readonly IProductRepository productRepository;
+        private readonly IEnumerable<IShippingProvider> shippingProviders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartService"/> class.
         /// </summary>
         /// <param name="productRepository">The product repository to use.</param>
-        public CartService(IProductRepository productRepository)
+        /// <param name="shippingProviders">All the shipping providers registered.</param>
+        public CartService(
+            IProductRepository productRepository,
+            IEnumerable<IShippingProvider> shippingProviders)
         {
             this.productRepository = productRepository;
+            this.shippingProviders = shippingProviders;
         }
 
         /// <inheritdoc/>
@@ -64,13 +69,7 @@ namespace EcomCli.Services.Cart
                 totalWeight += productData.Weigth * cartProduct.Quantity;
             }
 
-            // Get all the shipping providers through reflection.
-            // TODO: This is a naive implementation. In a real-world application, you would use a DI container to resolve the providers.
-            var shippingProviders = typeof(IShippingProvider).Assembly.GetTypes()
-                .Where(t => typeof(IShippingProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                .Select(t => (IShippingProvider)Activator.CreateInstance(t))
-                .ToList();
-            List<(decimal cost, IShippingProvider provider)> providers = shippingProviders
+            List<(decimal cost, IShippingProvider provider)> providers = this.shippingProviders
                 .Select(sp => (sp.EstimateShippingCost(totalWeight, cart.LivesFar), sp))
                 .ToList();
             foreach (var provider in providers)
