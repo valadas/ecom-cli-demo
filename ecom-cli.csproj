@@ -57,6 +57,7 @@
     <Compile Include="Services\Cart\Cart.cs" />
     <Compile Include="Services\Cart\CartProduct.cs" />
     <Compile Include="Services\Cart\CartService.cs" />
+    <Compile Include="Services\Cart\ICartService.cs" />
     <Compile Include="Services\Catalog\CatalogService.cs" />
     <Compile Include="Services\Catalog\ProductInfo.cs" />
   </ItemGroup>

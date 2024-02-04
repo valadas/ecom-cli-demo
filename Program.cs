@@ -41,7 +41,7 @@ namespace EcomCli
                 var quantity = AskForAmount();
 
                 var cart = new Cart();
-                var cartService = new CartService(productRepository);
+                ICartService cartService = new CartService(productRepository);
                 cartService.AddProduct(cart, selectedProductId, quantity);
 
                 Console.WriteLine("Do you live far ?");
