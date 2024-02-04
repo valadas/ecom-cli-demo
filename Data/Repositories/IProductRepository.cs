@@ -8,7 +8,7 @@ namespace EcomCli.Data.Repositories
     /// <summary>
     /// Provides data-access to products.
     /// </summary>
-    internal interface IProductRepository
+    public interface IProductRepository
     {
         /// <summary>
         /// Gets the available products (in stock).

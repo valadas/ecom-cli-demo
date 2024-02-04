@@ -6,6 +6,7 @@ namespace EcomCli.Services.Cart
     using System.Collections.Generic;
     using System.Linq;
     using EcomCli.Data.Repositories;
+    using EcomCli.Extensions;
     using EcomCli.Providers.Shipping;
 
     /// <inheritdoc cref="ICartService"/>
@@ -63,14 +64,8 @@ namespace EcomCli.Services.Cart
             Console.WriteLine($"Total product cost: {totalProductPrice}");
 
             var cheapestShippingProvider = this.shippingProviderFactory.SelectCheapestShippingProvider(cart);
-            var totalWeight = 0m;
-            foreach (var cartProduct in cart.Products)
-            {
-                var productData = this.productRepository.GetProduct(cartProduct.ProductId);
-                totalWeight += productData.Weigth * cartProduct.Quantity;
-            }
 
-            Console.WriteLine($"Picked {cheapestShippingProvider.Name} at {cheapestShippingProvider.EstimateShippingCost(totalWeight, cart.LivesFar):C}");
+            Console.WriteLine($"Picked {cheapestShippingProvider.Name} at {cheapestShippingProvider.EstimateShippingCost(cart.GetTotalWeight(this.productRepository), cart.LivesFar):C}");
             cheapestShippingProvider.CreateShippingLabel();
         }
     }

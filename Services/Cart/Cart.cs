@@ -7,7 +7,7 @@ namespace EcomCli.Services.Cart
     /// <summary>
     /// Data required to process a shopping cart.
     /// </summary>
-    internal class Cart
+    public class Cart
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Cart"/> class.

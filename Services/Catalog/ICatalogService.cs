@@ -8,7 +8,7 @@ namespace EcomCli.Services.Catalog
     /// <summary>
     /// Provides services related to the product catalog.
     /// </summary>
-    internal interface ICatalogService
+    public interface ICatalogService
     {
         /// <summary>
         /// Gets all the products.

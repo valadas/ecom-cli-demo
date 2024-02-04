@@ -49,6 +49,7 @@
     <Compile Include="Data\IEcomContext.cs" />
     <Compile Include="Data\Repositories\IProductRepository.cs" />
     <Compile Include="Data\Repositories\ProductRepository.cs" />
+    <Compile Include="Extensions\CartExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\Shipping\IShippingProvider.cs" />
