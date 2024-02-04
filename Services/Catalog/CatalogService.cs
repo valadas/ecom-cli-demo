@@ -7,6 +7,7 @@ namespace EcomCli.Services.Catalog
     using System.Linq;
     using EcomCli.Data;
     using EcomCli.Data.Entities;
+    using EcomCli.Data.Repositories;
 
     /// <summary>
     /// Provides services related to the product catalog.
@@ -19,19 +20,14 @@ namespace EcomCli.Services.Catalog
         /// <returns>A collection of <see cref="ProductInfo"/>.</returns>
         public IReadOnlyCollection<ProductInfo> GetAllProducts()
         {
-            using (var dataContext = new EcomContext())
+            var repository = new ProductRepository();
+            var availableProducts = repository.GetAvailableProducts();
+            return availableProducts.Select(p => new ProductInfo
             {
-                dataContext.Database.EnsureCreated();
-                return dataContext.Products
-                    .Where(p => p.StockQuanitty > 0)
-                    .OrderBy(p => p.Id)
-                    .Select(p => new ProductInfo
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Price = p.Price,
-                    }).ToList();
-            }
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+            }).ToList();
         }
 
         /// <summary>
@@ -41,13 +37,8 @@ namespace EcomCli.Services.Catalog
         /// <returns><see cref="Product"/>.</returns>
         public Product GetProduct(int productId)
         {
-            using (var datacontext = new EcomContext())
-            {
-                datacontext.Database.EnsureCreated();
-                return datacontext.Products
-                    .Where(p => p.Id == productId)
-                    .FirstOrDefault();
-            }
+            var repository = new ProductRepository();
+            return repository.GetProduct(productId);
         }
 
         /// <summary>
@@ -57,18 +48,13 @@ namespace EcomCli.Services.Catalog
         /// <returns><see cref="ProductInfo"/>.</returns>
         public ProductInfo GetProductInfo(int productId)
         {
-            using (var dataContext = new EcomContext())
+            var product = this.GetProduct(productId);
+            return new ProductInfo
             {
-                dataContext.Database.EnsureCreated();
-                return dataContext.Products
-                    .Where(p => p.Id == productId)
-                    .Select(p => new ProductInfo
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Price = p.Price,
-                    }).FirstOrDefault();
-            }
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+            };
         }
     }
 }

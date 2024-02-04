@@ -5,22 +5,22 @@ namespace EcomCli.Services.Cart
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using EcomCli.Data.Repositories;
     using EcomCli.Providers.Shipping;
-    using EcomCli.Services.Catalog;
 
     /// <summary>
     /// Provides services related to the shopping cart.
     /// </summary>
     internal class CartService
     {
-        private readonly CatalogService catalogService;
+        private readonly ProductRepository productRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartService"/> class.
         /// </summary>
         public CartService()
         {
-            this.catalogService = new CatalogService();
+            this.productRepository = new ProductRepository();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace EcomCli.Services.Cart
                 return;
             }
 
-            var product = this.catalogService.GetProductInfo(productId);
+            var product = this.productRepository.GetProduct(productId);
             cart.Products.Add(new CartProduct
             {
                 ProductId = productId,
@@ -56,21 +56,21 @@ namespace EcomCli.Services.Cart
             Console.WriteLine("=== PROCESSING CHECKOUT ===");
 
             var totalProductPrice = 0m;
-            foreach (var product in cart.Products)
+            foreach (var cartProduct in cart.Products)
             {
-                var productData = this.catalogService.GetProductInfo(product.ProductId);
-                var productPrice = productData.Price * product.Quantity;
+                var product = this.productRepository.GetProduct(cartProduct.ProductId);
+                var productPrice = product.Price * cartProduct.Quantity;
                 totalProductPrice += productPrice;
-                Console.WriteLine($"{productData.Name}: {product.Quantity} * {productData.Price:C} = ${productPrice}");
+                Console.WriteLine($"{product.Name}: {cartProduct.Quantity} * {product.Price:C} = ${productPrice}");
             }
 
             Console.WriteLine($"Total product cost: {totalProductPrice}");
 
             var totalWeight = 0m;
-            foreach (var product in cart.Products)
+            foreach (var cartProduct in cart.Products)
             {
-                var productData = this.catalogService.GetProduct(product.ProductId);
-                totalWeight += productData.Weigth * product.Quantity;
+                var productData = this.productRepository.GetProduct(cartProduct.ProductId);
+                totalWeight += productData.Weigth * cartProduct.Quantity;
             }
 
             // Get all the shipping providers through reflection.
