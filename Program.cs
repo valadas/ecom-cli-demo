@@ -3,7 +3,7 @@
 namespace EcomCli
 {
     using System;
-    using System.Runtime.CompilerServices;
+    using EcomCli.Data;
     using EcomCli.Data.Repositories;
     using EcomCli.Services.Cart;
     using EcomCli.Services.Catalog;
@@ -23,31 +23,35 @@ namespace EcomCli
             Console.WriteLine();
             Console.WriteLine("Please choose a product");
 
-            var productRepository = new ProductRepository();
-            var catalogService = new CatalogService(productRepository);
-            var prodcuts = catalogService.GetAllProducts();
-
-            foreach (var product in prodcuts)
+            using (var dataContext = new EcomContext())
             {
-                Console.WriteLine($"{product.Id}: {product.Name} - {product.Price:C}");
+                dataContext.Database.EnsureCreated();
+                var productRepository = new ProductRepository(dataContext);
+                var catalogService = new CatalogService(productRepository);
+                var prodcuts = catalogService.GetAllProducts();
+
+                foreach (var product in prodcuts)
+                {
+                    Console.WriteLine($"{product.Id}: {product.Name} - {product.Price:C}");
+                }
+
+                int selectedProductId = AskForOption();
+
+                Console.WriteLine("How many would you like to buy?");
+                var quantity = AskForAmount();
+
+                var cart = new Cart();
+                var cartService = new CartService(productRepository);
+                cartService.AddProduct(cart, selectedProductId, quantity);
+
+                Console.WriteLine("Do you live far ?");
+                var far = GetBooleanInput();
+                cart.LivesFar = far;
+
+                cartService.Checkout(cart);
+
+                Console.ReadLine();
             }
-
-            int selectedProductId = AskForOption();
-
-            Console.WriteLine("How many would you like to buy?");
-            var quantity = AskForAmount();
-
-            var cart = new Cart();
-            var cartService = new CartService(productRepository);
-            cartService.AddProduct(cart, selectedProductId, quantity);
-
-            Console.WriteLine("Do you live far ?");
-            var far = GetBooleanInput();
-            cart.LivesFar = far;
-
-            cartService.Checkout(cart);
-
-            Console.ReadLine();
         }
 
         private static int AskForOption()

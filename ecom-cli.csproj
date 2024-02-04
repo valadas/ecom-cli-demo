@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Data\EcomContext.cs" />
     <Compile Include="Data\Entities\Product.cs" />
+    <Compile Include="Data\IEcomContext.cs" />
     <Compile Include="Data\Repositories\IProductRepository.cs" />
     <Compile Include="Data\Repositories\ProductRepository.cs" />
     <Compile Include="Program.cs" />
