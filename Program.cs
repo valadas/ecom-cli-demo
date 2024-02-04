@@ -3,10 +3,9 @@
 namespace EcomCli
 {
     using System;
-    using EcomCli.Data;
-    using EcomCli.Data.Repositories;
     using EcomCli.Services.Cart;
     using EcomCli.Services.Catalog;
+    using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// The main program entry point.
@@ -23,14 +22,16 @@ namespace EcomCli
             Console.WriteLine();
             Console.WriteLine("Please choose a product");
 
-            using (var dataContext = new EcomContext())
+            var services = new ServiceCollection();
+            Startup.ConfigureServices(services);
+            var serviceProvider = services.BuildServiceProvider();
+            using (var scope = serviceProvider.CreateScope())
             {
-                dataContext.Database.EnsureCreated();
-                var productRepository = new ProductRepository(dataContext);
-                var catalogService = new CatalogService(productRepository);
-                var prodcuts = catalogService.GetAllProducts();
+                var catalogService = scope.ServiceProvider.GetRequiredService<ICatalogService>();
+                var cartService = scope.ServiceProvider.GetRequiredService<ICartService>();
 
-                foreach (var product in prodcuts)
+                var products = catalogService.GetAllProducts();
+                foreach (var product in products)
                 {
                     Console.WriteLine($"{product.Id}: {product.Name} - {product.Price:C}");
                 }
@@ -41,7 +42,6 @@ namespace EcomCli
                 var quantity = AskForAmount();
 
                 var cart = new Cart();
-                ICartService cartService = new CartService(productRepository);
                 cartService.AddProduct(cart, selectedProductId, quantity);
 
                 Console.WriteLine("Do you live far ?");
