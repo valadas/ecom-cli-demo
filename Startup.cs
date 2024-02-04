@@ -31,6 +31,7 @@ namespace EcomCli
             });
             services.AddScoped<IShippingProvider, UpsShippingProvider>();
             services.AddScoped<IShippingProvider, UspsShippingProvider>();
+            services.AddScoped<IShippingProviderFactory, ShippingProviderFactory>();
         }
     }
 }

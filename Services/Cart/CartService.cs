@@ -12,19 +12,19 @@ namespace EcomCli.Services.Cart
     internal class CartService : ICartService
     {
         private readonly IProductRepository productRepository;
-        private readonly IEnumerable<IShippingProvider> shippingProviders;
+        private readonly IShippingProviderFactory shippingProviderFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CartService"/> class.
+        /// Initializes a new instance of the <see cref="CartService" /> class.
         /// </summary>
         /// <param name="productRepository">The product repository to use.</param>
-        /// <param name="shippingProviders">All the shipping providers registered.</param>
+        /// <param name="shippingProviderFactory">The shipping provider factory.</param>
         public CartService(
             IProductRepository productRepository,
-            IEnumerable<IShippingProvider> shippingProviders)
+            IShippingProviderFactory shippingProviderFactory)
         {
             this.productRepository = productRepository;
-            this.shippingProviders = shippingProviders;
+            this.shippingProviderFactory = shippingProviderFactory;
         }
 
         /// <inheritdoc/>
@@ -62,6 +62,7 @@ namespace EcomCli.Services.Cart
 
             Console.WriteLine($"Total product cost: {totalProductPrice}");
 
+            var cheapestShippingProvider = this.shippingProviderFactory.SelectCheapestShippingProvider(cart);
             var totalWeight = 0m;
             foreach (var cartProduct in cart.Products)
             {
@@ -69,17 +70,8 @@ namespace EcomCli.Services.Cart
                 totalWeight += productData.Weigth * cartProduct.Quantity;
             }
 
-            List<(decimal cost, IShippingProvider provider)> providers = this.shippingProviders
-                .Select(sp => (sp.EstimateShippingCost(totalWeight, cart.LivesFar), sp))
-                .ToList();
-            foreach (var provider in providers)
-            {
-                Console.WriteLine($"{provider.provider.Name}: {provider.cost:C}");
-            }
-
-            var cheapest = providers.OrderBy(p => p.cost).First();
-            Console.WriteLine($"Picked {cheapest.provider.Name} at {cheapest.cost:C}");
-            cheapest.provider.CreateShippingLabel();
+            Console.WriteLine($"Picked {cheapestShippingProvider.Name} at {cheapestShippingProvider.EstimateShippingCost(totalWeight, cart.LivesFar):C}");
+            cheapestShippingProvider.CreateShippingLabel();
         }
     }
 }

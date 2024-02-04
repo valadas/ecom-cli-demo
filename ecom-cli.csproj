@@ -52,6 +52,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\Shipping\IShippingProvider.cs" />
+    <Compile Include="Providers\Shipping\IShippingProviderFactory.cs" />
+    <Compile Include="Providers\Shipping\ShippingProviderFactory.cs" />
     <Compile Include="Providers\Shipping\UpsShippingProvider.cs" />
     <Compile Include="Providers\Shipping\UspsShippingProvider.cs" />
     <Compile Include="Services\Cart\Cart.cs" />
