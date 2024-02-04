@@ -5,14 +5,10 @@ namespace EcomCli.Data
     using EcomCli.Data.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    /// <summary>
-    /// Data context for the EcomCli application.
-    /// </summary>
-    internal class EcomContext : DbContext
+    /// <inheritdoc <see cref="IEcomContext" />./>
+    internal class EcomContext : DbContext, IEcomContext
     {
-        /// <summary>
-        /// Gets or sets the products.
-        /// </summary>
+        /// <inheritdoc/>
         public DbSet<Product> Products { get; set; }
 
         /// <inheritdoc/>

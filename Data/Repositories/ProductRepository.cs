@@ -6,41 +6,35 @@ namespace EcomCli.Data.Repositories
     using System.Linq;
     using EcomCli.Data.Entities;
 
-    /// <summary>
-    /// Provides data-access to products.
-    /// </summary>
-    internal class ProductRepository
+    /// <inheritdoc cref="IProductRepository"/>
+    internal class ProductRepository : IProductRepository
     {
-        /// <summary>
-        /// Gets the available products (in stock).
-        /// </summary>
-        /// <returns>A collection of <see cref="Product"/>.</returns>
-        public IReadOnlyCollection<Product> GetAvailableProducts()
-        {
-            using (var dataContext = new EcomContext())
-            {
-                dataContext.Database.EnsureCreated();
-                return dataContext.Products
-                    .Where(p => p.StockQuanitty > 0)
-                    .OrderBy(p => p.Id)
-                    .ToList();
-            }
-        }
+        private readonly IEcomContext dataContext;
 
         /// <summary>
-        /// Gets a single product.
+        /// Initializes a new instance of the <see cref="ProductRepository"/> class.
         /// </summary>
-        /// <param name="id">The identifier for the product to get.</param>
-        /// <returns><see cref="Product"/>.</returns>
+        /// <param name="dataContext">The underlying data context to use.</param>
+        public ProductRepository(IEcomContext dataContext)
+        {
+            this.dataContext = dataContext;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyCollection<Product> GetAvailableProducts()
+        {
+            return this.dataContext.Products
+                .Where(p => p.StockQuanitty > 0)
+                .OrderBy(p => p.Id)
+                .ToList();
+        }
+
+        /// <inheritdoc/>
         public Product GetProduct(int id)
         {
-            using (var dataContext = new EcomContext())
-            {
-                dataContext.Database.EnsureCreated();
-                return dataContext.Products
-                    .Where(p => p.Id == id)
-                    .FirstOrDefault();
-            }
+            return this.dataContext.Products
+                .Where(p => p.Id == id)
+                .FirstOrDefault();
         }
     }
 }

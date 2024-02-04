@@ -2,26 +2,29 @@
 
 namespace EcomCli.Services.Catalog
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using EcomCli.Data;
     using EcomCli.Data.Entities;
     using EcomCli.Data.Repositories;
 
-    /// <summary>
-    /// Provides services related to the product catalog.
-    /// </summary>
-    internal class CatalogService
+    /// <inheritdoc cref="ICatalogService"/>
+    internal class CatalogService : ICatalogService
     {
+        private readonly IProductRepository productRepository;
+
         /// <summary>
-        /// Gets all the products.
+        /// Initializes a new instance of the <see cref="CatalogService"/> class.
         /// </summary>
-        /// <returns>A collection of <see cref="ProductInfo"/>.</returns>
+        /// <param name="productRepository">The product repository to use.</param>
+        public CatalogService(IProductRepository productRepository)
+        {
+            this.productRepository = productRepository;
+        }
+
+        /// <inheritdoc/>
         public IReadOnlyCollection<ProductInfo> GetAllProducts()
         {
-            var repository = new ProductRepository();
-            var availableProducts = repository.GetAvailableProducts();
+            var availableProducts = this.productRepository.GetAvailableProducts();
             return availableProducts.Select(p => new ProductInfo
             {
                 Id = p.Id,
@@ -30,22 +33,13 @@ namespace EcomCli.Services.Catalog
             }).ToList();
         }
 
-        /// <summary>
-        /// Gets a single product.
-        /// </summary>
-        /// <param name="productId">The product identifier.</param>
-        /// <returns><see cref="Product"/>.</returns>
+        /// <inheritdoc/>
         public Product GetProduct(int productId)
         {
-            var repository = new ProductRepository();
-            return repository.GetProduct(productId);
+            return this.productRepository.GetProduct(productId);
         }
 
-        /// <summary>
-        /// Gets a single product.
-        /// </summary>
-        /// <param name="productId">The product identifier of the product to get.</param>
-        /// <returns><see cref="ProductInfo"/>.</returns>
+        /// <inheritdoc/>
         public ProductInfo GetProductInfo(int productId)
         {
             var product = this.GetProduct(productId);

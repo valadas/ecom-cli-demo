@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Data\EcomContext.cs" />
     <Compile Include="Data\Entities\Product.cs" />
+    <Compile Include="Data\IEcomContext.cs" />
+    <Compile Include="Data\Repositories\IProductRepository.cs" />
     <Compile Include="Data\Repositories\ProductRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,7 +57,9 @@
     <Compile Include="Services\Cart\Cart.cs" />
     <Compile Include="Services\Cart\CartProduct.cs" />
     <Compile Include="Services\Cart\CartService.cs" />
+    <Compile Include="Services\Cart\ICartService.cs" />
     <Compile Include="Services\Catalog\CatalogService.cs" />
+    <Compile Include="Services\Catalog\ICatalogService.cs" />
     <Compile Include="Services\Catalog\ProductInfo.cs" />
   </ItemGroup>
   <ItemGroup>

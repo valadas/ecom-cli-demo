@@ -8,27 +8,21 @@ namespace EcomCli.Services.Cart
     using EcomCli.Data.Repositories;
     using EcomCli.Providers.Shipping;
 
-    /// <summary>
-    /// Provides services related to the shopping cart.
-    /// </summary>
-    internal class CartService
+    /// <inheritdoc cref="ICartService"/>
+    internal class CartService : ICartService
     {
-        private readonly ProductRepository productRepository;
+        private readonly IProductRepository productRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CartService"/> class.
         /// </summary>
-        public CartService()
+        /// <param name="productRepository">The product repository to use.</param>
+        public CartService(IProductRepository productRepository)
         {
-            this.productRepository = new ProductRepository();
+            this.productRepository = productRepository;
         }
 
-        /// <summary>
-        /// Adds a product to the cart.
-        /// </summary>
-        /// <param name="cart">The cart to add to.</param>
-        /// <param name="productId">The product identifier.</param>
-        /// <param name="quantity">The quantity to add.</param>
+        /// <inheritdoc/>
         public void AddProduct(Cart cart, int productId, int quantity)
         {
             var existing = cart.Products.FirstOrDefault(p => p.ProductId == productId);
@@ -46,10 +40,7 @@ namespace EcomCli.Services.Cart
             });
         }
 
-        /// <summary>
-        /// Checkouts the specified cart.
-        /// </summary>
-        /// <param name="cart">The cart to checkout.</param>
+        /// <inheritdoc/>
         public void Checkout(Cart cart)
         {
             Console.WriteLine();
@@ -74,6 +65,7 @@ namespace EcomCli.Services.Cart
             }
 
             // Get all the shipping providers through reflection.
+            // TODO: This is a naive implementation. In a real-world application, you would use a DI container to resolve the providers.
             var shippingProviders = typeof(IShippingProvider).Assembly.GetTypes()
                 .Where(t => typeof(IShippingProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
                 .Select(t => (IShippingProvider)Activator.CreateInstance(t))
