@@ -7,10 +7,8 @@ namespace EcomCli.Services.Catalog
     using EcomCli.Data.Entities;
     using EcomCli.Data.Repositories;
 
-    /// <summary>
-    /// Provides services related to the product catalog.
-    /// </summary>
-    internal class CatalogService
+    /// <inheritdoc cref="ICatalogService"/>
+    internal class CatalogService : ICatalogService
     {
         private readonly IProductRepository productRepository;
 
@@ -23,10 +21,7 @@ namespace EcomCli.Services.Catalog
             this.productRepository = productRepository;
         }
 
-        /// <summary>
-        /// Gets all the products.
-        /// </summary>
-        /// <returns>A collection of <see cref="ProductInfo"/>.</returns>
+        /// <inheritdoc/>
         public IReadOnlyCollection<ProductInfo> GetAllProducts()
         {
             var availableProducts = this.productRepository.GetAvailableProducts();
@@ -38,21 +33,13 @@ namespace EcomCli.Services.Catalog
             }).ToList();
         }
 
-        /// <summary>
-        /// Gets a single product.
-        /// </summary>
-        /// <param name="productId">The product identifier.</param>
-        /// <returns><see cref="Product"/>.</returns>
+        /// <inheritdoc/>
         public Product GetProduct(int productId)
         {
             return this.productRepository.GetProduct(productId);
         }
 
-        /// <summary>
-        /// Gets a single product.
-        /// </summary>
-        /// <param name="productId">The product identifier of the product to get.</param>
-        /// <returns><see cref="ProductInfo"/>.</returns>
+        /// <inheritdoc/>
         public ProductInfo GetProductInfo(int productId)
         {
             var product = this.GetProduct(productId);
