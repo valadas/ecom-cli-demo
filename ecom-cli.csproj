@@ -67,6 +67,7 @@
     <Compile Include="Services\Catalog\ProductInfo.cs" />
     <Compile Include="Services\Payment\IPaymentService.cs" />
     <Compile Include="Services\Payment\PaymentRequest.cs" />
+    <Compile Include="Services\Payment\PaymentRequestValidator.cs" />
     <Compile Include="Services\Payment\PaymentService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
