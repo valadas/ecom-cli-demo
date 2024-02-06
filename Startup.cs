@@ -7,6 +7,8 @@ namespace EcomCli
     using EcomCli.Providers.Shipping;
     using EcomCli.Services.Cart;
     using EcomCli.Services.Catalog;
+    using EcomCli.Services.Payment;
+    using FluentValidation;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
@@ -32,6 +34,8 @@ namespace EcomCli
             services.AddScoped<IShippingProvider, UpsShippingProvider>();
             services.AddScoped<IShippingProvider, UspsShippingProvider>();
             services.AddScoped<IShippingProviderFactory, ShippingProviderFactory>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddSingleton<IValidator<PaymentRequest>, PaymentRequestValidator>();
         }
     }
 }
